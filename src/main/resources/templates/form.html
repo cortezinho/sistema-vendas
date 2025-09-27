@@ -7,11 +7,11 @@
   <title th:if="${manut.id}">Manutenções - Editar Tarefa</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
+<body class="bg-primary">
 
 <main class="container py-4">
-  <h1 th:unless="${manut.id}" class="mb-4 fw-bold">Nova Tarefa</h1>
-  <h1 th:if="${manut.id}" class="mb-4 fw-bold">Editar Tarefa</h1>
+  <h1 th:unless="${manut.id}" class="mb-4 fw-bold text-white">Nova Manutenção</h1>
+  <h1 th:if="${manut.id}" class="mb-4 fw-bold text-white">Editar Manutenção</h1>
 
   <form method="post" th:object="${manut}" class="shadow p-4 rounded bg-light">
     <div class="mb-3">
