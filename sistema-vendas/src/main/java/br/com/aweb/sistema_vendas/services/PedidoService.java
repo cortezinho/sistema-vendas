@@ -12,7 +12,8 @@ import br.com.aweb.sistema_vendas.model.ItemPedido;
 import br.com.aweb.sistema_vendas.model.Pedido;
 import br.com.aweb.sistema_vendas.model.Produto;
 import br.com.aweb.sistema_vendas.model.StatusPedido;
-import br.com.aweb.sistema_vendas.repository.PedidoReposotory;
+// CORREÇÃO 1: Import com o nome correto
+import br.com.aweb.sistema_vendas.repository.PedidoRepository; 
 import br.com.aweb.sistema_vendas.repository.ProdutoRepository;
 import jakarta.transaction.Transactional;
 
@@ -20,7 +21,10 @@ import jakarta.transaction.Transactional;
 public class PedidoService {
 
     @Autowired
-    private PedidoReposotory pedidoRepository;
+    // CORREÇÃO 2: Nome da classe e da variável corrigido
+    private PedidoRepository pedidoRepository; 
+
+    @Autowired
     private ProdutoRepository produtoRepository;
 
     // CREATE
@@ -48,11 +52,11 @@ public class PedidoService {
         Optional<Produto> optionalProduto = produtoRepository.findById(produtoId);
 
         if (!optionalPedido.isPresent()) {
-            throw new IllegalArgumentException("Produto/Pedido não encontrado!");
+            throw new IllegalArgumentException("Pedido não encontrado!");
         }
 
         if (!optionalProduto.isPresent()) {
-            throw new IllegalArgumentException("Produto/Pedido não encontrado!");
+            throw new IllegalArgumentException("Produto não encontrado!");
         }
 
         Pedido pedido = optionalPedido.get();
@@ -60,16 +64,19 @@ public class PedidoService {
 
         // verificar se o pedido está ativo
         if (pedido.getStatus() != StatusPedido.ATIVO) {
-            throw new IllegalStateException("Produto/Pedido não encontrado!");
+            throw new IllegalStateException("O pedido não está ativo e não pode ser alterado!");
         }
 
         // verificar a quantidade em estoque
         if (produto.getEstoque() < quantidade) {
-            throw new IllegalStateException("Produto/Pedido não encontrado!");
+            throw new IllegalStateException("Estoque insuficiente para o produto: " + produto.getNome());
         }
 
         // criar o item pedido
-        ItemPedido item = new ItemPedido(produto, quantidade);
+        ItemPedido item = new ItemPedido();
+        item.setProduto(produto);
+        item.setQuatidade(quantidade);
+        item.setPrecoUnitario(produto.getPreco()); // Salva o preço no momento da compra
         item.setPedido(pedido);
 
         // adiciona a lista de pedidos
@@ -82,9 +89,10 @@ public class PedidoService {
         calcularValorTotal(pedido);
 
         // salva alterações
-        pedidoRepository.save(pedido);
         produtoRepository.save(produto);
+        Pedido pedidoSalvo = pedidoRepository.save(pedido);
 
+        return pedidoSalvo;
     }
 
     @Transactional
@@ -125,8 +133,8 @@ public class PedidoService {
         calcularValorTotal(pedido);
 
         // salvar as alterações
-        pedidoRepository.save(pedido);
         produtoRepository.save(produto);
+        pedidoRepository.save(pedido);
 
         return pedido;
     }
@@ -167,7 +175,7 @@ public class PedidoService {
     }
 
     public List<Pedido> buscarPorStatus(StatusPedido status) {
-        return pedidoRepository.findByStatusPedido(status);
+        // CORREÇÃO 3: Nome do método corrigido
+        return pedidoRepository.findByStatus(status);
     }
-
 }
