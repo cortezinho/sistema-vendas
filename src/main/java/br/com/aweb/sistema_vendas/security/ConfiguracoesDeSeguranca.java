@@ -17,32 +17,23 @@ public class ConfiguracoesDeSeguranca {
     public SecurityFilterChain filtrosSeguranca(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(req -> {
-                    // Libera acesso à tela de login e aos arquivos estáticos (CSS, JS)
                     req.requestMatchers("/login", "/css/**", "/js/**").permitAll();
-                    
-                    // Permite que usuários ADMIN vejam e modifiquem (GET, POST)
-                    req.requestMatchers("/clientes/novo", "/clientes/editar/**", "/clientes/deletar/**").hasRole("ADMIN");
+                    req.requestMatchers("/clientes", "/clientes/novo", "/clientes/editar/**", "/clientes/deletar/**").hasRole("ADMIN");
                     req.requestMatchers("/produtos/novo", "/produtos/editar/**", "/produtos/deletar/**").hasRole("ADMIN");
-                    
-                    // Permite que usuários autenticados (ADMIN ou PADRAO) vejam as listas (apenas GET)
-                    req.requestMatchers(HttpMethod.GET, "/clientes", "/produtos").authenticated();
-
-                    // Regra para a página inicial
+                    req.requestMatchers(HttpMethod.GET, "/produtos").authenticated();
                     req.requestMatchers("/").authenticated();
-                    
-                    // Qualquer outra requisição não mapeada exige autenticação
                     req.anyRequest().authenticated(); 
                 })
                 .formLogin(form -> form
-                        .loginPage("/login") // Define a página de login customizada
-                        .defaultSuccessUrl("/") // Redireciona para a home após o login
-                        .permitAll() // Permite acesso total à página de login
-                )
-                .logout(logout -> logout
-                        .logoutSuccessUrl("/login?logout") // URL ao deslogar
+                        .loginPage("/login")
+                        .defaultSuccessUrl("/")
                         .permitAll()
                 )
-                .rememberMe(rememberMe -> rememberMe.key("lembrarDeMim")) // Ativa o "Lembrar de mim"
+                .logout(logout -> logout
+                        .logoutSuccessUrl("/login?logout")
+                        .permitAll()
+                )
+                .rememberMe(rememberMe -> rememberMe.key("lembrarDeMim"))
                 .build();
     }
 
