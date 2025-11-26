@@ -1,4 +1,8 @@
 +---------------------------+
+|COPIA E COLA DO COMANDO DO |
+|DOCKER                     |
+|Docker composse up -d      |
++---------------------------+
 |LOGIN E SENHA DOS USUÁRIOS |
 +---------------------------+
 |LOGIN DE ADMIN:            |
