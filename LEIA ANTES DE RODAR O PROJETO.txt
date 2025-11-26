@@ -1,0 +1,11 @@
++---------------------------+
+|LOGIN E SENHA DOS USUÁRIOS |
++---------------------------+
+|LOGIN DE ADMIN:            |
+|EMAIL: admin@email.com     |
+|SENHA: admin               |
++---------------------------+
+|LOGIN DE USER:             |
+|EMAIL: user@email.com      |
+|SENHA: user                |
++---------------------------+
